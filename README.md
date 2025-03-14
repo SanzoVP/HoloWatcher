@@ -15,7 +15,7 @@ Have at least Windows 10 TH2 10586 for the funny colors otherwise good luck read
 4. Enable the YouTube Data API v3
 5. Go to "Credentials" and create an OAuth client ID
 6. Choose "Desktop application" as the application type
-    - During the setup, you’ll be asked to publish the app. You can either go through Google’s verification process 
+    - During the setup, you’ll be asked to publish the app. You can go through Google’s verification process 
 7. Download the JSON file and rename it to `client_secrets.json`
 8. Place the file in the same directory as the application and make sure it's formatted like `client_secrets.json.example`
     - It should be in the **`build`** folder where the example also is
