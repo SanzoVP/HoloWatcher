@@ -47,3 +47,9 @@ HoloWatcher is a program that you are supposed to let run in the background, it 
 This is so you never miss a stream again no matter what you are doing. (You should probably turn it off while playing a game or doing something important so it doesn't distract you ^w^)
 
 Why did I do this? idk I thought the idea of just doing something just to be suprised by a random stream out of no where was funny and that it would be a good learning experience
+
+## More stuff if you care
+
+I'm probably mostly done with this but if there is a new version you can go into the build folder and then holowatcher folder and then the subscriptions.json, so like `build\HoloWatcher\data\subscriptions.json` to copy over your subscriptions if you don't want to set them up again.
+
+I'll be making new versions for the newer members or if I missed any but other than that it should be fine to use the same version.
