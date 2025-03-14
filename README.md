@@ -32,6 +32,8 @@ Have at least Windows 10 TH2 10586 for the funny colors otherwise good luck read
 ### Go wild
 Subscribe to whoever you want, list will be updated if I remember to.
 
+If you want you can do windows+r and type `shell:startup` and then add a shortcut to the run.bat to automatically start it up, you do have to type in auto and leave it running in the background
+
 #### Commands
 - action: `commands`
 - To subscribe: `sub`, `subscribe`
