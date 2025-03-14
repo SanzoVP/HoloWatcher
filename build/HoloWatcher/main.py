@@ -126,7 +126,6 @@ def subscribe_generations(selected_branch, subscriptions):
     # Show available generations for the selected branch
     generations = vtubers[selected_branch]
     generation_names = list(generations.keys())
-    clear_terminal()
     print(f"{CYAN}Select Generation:{RESET}")
     for i, gen in enumerate(generation_names, start=1):
         print(f"{YELLOW}{i}. {gen}{RESET}")
@@ -150,7 +149,6 @@ def subscribe_generations(selected_branch, subscriptions):
 
 def subscribe_vtubers(selected_branch, selected_generation, selected_vtubers, subscriptions):
     # Ask user to select VTubers from this generation
-    clear_terminal()
     print(f"{CYAN}Select VTubers to subscribe to from {selected_generation}:{RESET}")
     for i, vtuber in enumerate(selected_vtubers, start=1):
         print(f"{YELLOW}{i}. {vtuber['name']}{RESET}")
