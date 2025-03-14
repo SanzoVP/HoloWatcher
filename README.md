@@ -10,8 +10,15 @@
 6. Download the JSON file and rename it to `client_secrets.json`
 7. Place the file in the same directory as the application and make sure it's formatted like `client_secrets.json.example`
 
+## Open the app
+- Open it by running the run.bat file, it should handle everything correctly
+    - if not please report it as a bug in [Bug Reports](https://github.com/SanzoVP/HoloWatcher/issues)
+
 ## First Run
 
 - On first run, the application will open a browser window
 - Sign in with your Google account and grant the requested permissions
 - Your credentials will be saved as `token.pickle` for future use
+
+## Go wild
+- Subscribe to whoever you want, list will be updated

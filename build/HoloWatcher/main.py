@@ -3,7 +3,11 @@ from youtube_api import YouTubeAPI
 import webbrowser
 import os
 import time
-import threading  # Import threading to handle background tasks
+import threading
+import requests
+
+repo_owner = 'SanzoVP'
+repo_name = 'HoloWatch'
 
 # ANSI escape codes for terminal coloring
 RESET = "\033[0m"
@@ -14,6 +18,30 @@ RED = "\033[31m"
 CYAN = "\033[36m"
 
 opened_streams_file = "data/opened_streams.json"
+
+
+def check_github_release(repo_owner, repo_name):
+    """Check if a new release is available on GitHub for the given repository."""
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+
+        release_data = response.json()
+        latest_version = release_data['tag_name']
+        release_url = release_data['html_url']
+        release_notes = release_data.get('body', 'No release notes available.')
+
+        print(f"{CYAN}Latest Release:{RESET}")
+        print(f"{GREEN}Version: {latest_version}{RESET}")
+        print(f"{GREEN}Release Notes: {release_notes}{RESET}")
+        print(f"{GREEN}Release URL: {release_url}{RESET}")
+    except requests.exceptions.RequestException as e:
+        print(f"{RED}Error checking GitHub releases: {e}{RESET}")
+
+
+check_github_release(repo_owner, repo_name)
+
 
 def load_vtubers():
     """Load VTubers data from JSON file."""
@@ -39,6 +67,7 @@ vtubers = load_vtubers()
 
 def subscribe(step="main"):
     subscriptions = []
+    # Open subscriptions
     try:
         with open("data/subscriptions.json", "r") as f:
             data = json.load(f)
@@ -54,7 +83,7 @@ def subscribe(step="main"):
         user_input = input().strip()
 
         if user_input.lower() == 'back':
-            return  # Exit the function to go back to the previous menu
+            return
 
         if user_input.lower() == 'browse':
             # Navigate to branches selection
