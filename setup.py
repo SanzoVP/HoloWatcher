@@ -7,20 +7,20 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 # Read version from version.py
 about = {}
-with open(os.path.join("vtuber_tracker", "version.py"), encoding="utf-8") as f:
+with open(os.path.join("HoloWatcher", "version.py"), encoding="utf-8") as f:
     exec(f.read(), about)
 
 setup(
-    name="vtuber-tracker",
+    name="HoloWatcher",
     version=about["__version__"],
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="Track and get notifications when your favorite VTubers go live",
+    author="Renzo van Putten",
+    author_email="renzovanputten@gmail.com",
+    description="Track and open a tab when your favorite VTubers go live",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/vtuber-tracker",
+    url="https://github.com/SanzoVP/HoloWatcher",
     project_urls={
-        "Bug Tracker": "https://github.com/yourusername/vtuber-tracker/issues",
+        "Bug Tracker": "https://github.com/SanzoVP/HoloWatcher/issues",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -30,7 +30,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     package_data={
-        "vtuber_tracker": ["data/*.json", "*.example"],
+        "HoloWatcher": ["data/*.json", "*.example"],
     },
     python_requires=">=3.6",
     install_requires=[
@@ -40,7 +40,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "vtuber-tracker=vtuber_tracker.main:main",
+            "HoloWatcher=HoloWatcher.main:main",
         ],
     },
 )
