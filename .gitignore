@@ -1,4 +1,5 @@
 .qodo
 .env
+__pycache__
 client_secrets.json
 token.pickle
