@@ -1,4 +1,4 @@
-# VTuber Tracker - Setup Instructions
+# HoloWatcher - Setup Instructions
 
 ## Setting up YouTube API
 
@@ -8,7 +8,7 @@
 4. Go to "Credentials" and create an OAuth client ID
 5. Choose "Desktop application" as the application type
 6. Download the JSON file and rename it to `client_secrets.json`
-7. Place the file in the same directory as the application
+7. Place the file in the same directory as the application and make sure it's formatted like `client_secrets.json.example`
 
 ## First Run
 
