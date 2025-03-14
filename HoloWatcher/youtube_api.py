@@ -38,8 +38,9 @@ class YouTubeAPI:
     def authenticate(self):
         """Authenticate and save credentials for future use."""
         try:
+            # Adjust the path to point to the correct location of client_secrets.json
             flow = InstalledAppFlow.from_client_secrets_file(
-                'client_secrets.json', SCOPES)  # Replace with your own 'client_secrets.json'
+                os.path.join(os.path.dirname(__file__), '..', 'client_secrets.json'), SCOPES)
         except FileNotFoundError:
             print(f"{RED}ERROR: client_secrets.json not found!{RESET}")
             print(f"{YELLOW}Please follow the setup instructions in README.md to create your credentials.{RESET}")
@@ -47,6 +48,9 @@ class YouTubeAPI:
             
         self.credentials = flow.run_local_server(port=0)  # This will open a web browser for login
         # Save credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(self.credentials, token)
+
 
     def get_live_status(self, channel_id):
         """Check if a channel is currently live and get upcoming streams."""
@@ -90,7 +94,6 @@ class YouTubeAPI:
                             'url': f"https://www.youtube.com/watch?v={video['id']}"
                         })
                     elif video.get('snippet', {}).get('liveBroadcastContent') == 'upcoming':
-                        # Check if scheduled start time exists
                         if 'scheduledStartTime' in video['liveStreamingDetails']:
                             start_time = video['liveStreamingDetails']['scheduledStartTime']
                             upcoming_streams.append({
@@ -107,5 +110,3 @@ class YouTubeAPI:
             }
         
         return {"live": False, "upcoming": []}
-    
-    # Additional methods...

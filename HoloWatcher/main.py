@@ -13,7 +13,7 @@ YELLOW = "\033[33m"
 RED = "\033[31m"
 CYAN = "\033[36m"
 
-opened_streams_file = "opened_streams.json"
+opened_streams_file = "data/opened_streams.json"
 
 def load_vtubers():
     """Load VTubers data from JSON file."""
@@ -40,7 +40,7 @@ vtubers = load_vtubers()
 def subscribe(step="main"):
     subscriptions = []
     try:
-        with open("subscriptions.json", "r") as f:
+        with open("data/subscriptions.json", "r") as f:
             data = json.load(f)
             if isinstance(data, list):
                 subscriptions = data
@@ -132,7 +132,7 @@ def subscribe_vtubers(selected_branch, selected_generation, selected_vtubers, su
                 print(f"{RED}Unsubscribed from {vtuber['name']}{RESET}")
     
     # Save subscriptions to file
-    with open("subscriptions.json", "w") as f:
+    with open("data/subscriptions.json", "w") as f:
         json.dump(subscriptions, f)
     
     # After subscription, go back to VTuber selection for this generation
@@ -166,11 +166,11 @@ def handle_direct_subscription(user_input, subscriptions):
             print(f"{RED}VTuber '{vtuber_name}' not found. Please check the name and try again.{RESET}")
     
     # Save subscriptions to file
-    with open("subscriptions.json", "w") as f:
+    with open("data/subscriptions.json", "w") as f:
         json.dump(subscriptions, f, indent=4)
 
 def check_live():
-    with open("subscriptions.json", "r") as f:
+    with open("data/subscriptions.json", "r") as f:
         data = json.load(f)
         channel_ids = [vtuber["channel_id"] for vtuber in data]
 
@@ -216,7 +216,7 @@ def automation_loop():
 def view_subscriptions():
     """Display all current subscriptions organized by branch and generation."""
     try:
-        with open("subscriptions.json", "r") as f:
+        with open("data/subscriptions.json", "r") as f:
             data = json.load(f)
             subscriptions = data if isinstance(data, list) else data.get("subscriptions", [])
     except (FileNotFoundError, json.JSONDecodeError):
