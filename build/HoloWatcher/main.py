@@ -7,7 +7,7 @@ import threading
 import requests
 
 repo_owner = 'SanzoVP'
-repo_name = 'HoloWatch'
+repo_name = 'HoloWatcher'
 
 # ANSI escape codes for terminal coloring
 RESET = "\033[0m"
