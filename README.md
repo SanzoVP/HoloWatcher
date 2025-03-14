@@ -3,7 +3,9 @@
 
 ## Setup Instructions
 
-Make sure you have at least python 3.12.2 installed 
+Make sure you have at least python 3.12.2 installed
+
+Have at least Windows 10 TH2 10586 for the funny colors otherwise good luck reading it
 
 ### Setting up YouTube API
 
