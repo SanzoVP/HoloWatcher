@@ -3,6 +3,8 @@
 
 ## Setup Instructions
 
+Make sure you have at least python 3.12.2 installed 
+
 ### Setting up YouTube API
 
 1. Download the [Latest Release](https://github.com/SanzoVP/HoloWatcher/releases/latest) and unzip it
