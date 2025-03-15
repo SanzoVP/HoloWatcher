@@ -3,7 +3,11 @@ from youtube_api import YouTubeAPI
 import webbrowser
 import os
 import time
-import threading  # Import threading to handle background tasks
+import threading
+import requests
+
+repo_owner = 'SanzoVP'
+repo_name = 'HoloWatcher'
 
 # ANSI escape codes for terminal coloring
 RESET = "\033[0m"
@@ -15,6 +19,33 @@ CYAN = "\033[36m"
 
 opened_streams_file = "data/opened_streams.json"
 
+def clear_terminal():
+    """Clear the terminal screen."""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def check_github_release(repo_owner, repo_name):
+    """Check if a new release is available on GitHub for the given repository."""
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+
+        release_data = response.json()
+        latest_version = release_data['tag_name']
+        release_url = release_data['html_url']
+        release_notes = release_data.get('body', 'No release notes available.')
+
+        clear_terminal()
+        print(f"{CYAN}Latest Release:{RESET}")
+        print(f"{GREEN}Version: {latest_version}{RESET}")
+        print(f"{GREEN}Release Notes: {release_notes}{RESET}")
+        print(f"{GREEN}Release URL: {release_url}{RESET}")
+    except requests.exceptions.RequestException as e:
+        clear_terminal()
+        print(f"{RED}Error checking GitHub releases: {e}{RESET}")
+
+check_github_release(repo_owner, repo_name)
+
 def load_vtubers():
     """Load VTubers data from JSON file."""
     vtubers_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "vtubers.json")
@@ -25,6 +56,7 @@ def load_vtubers():
         # Create default vtubers.json if it doesn't exist
         with open(vtubers_file, "w") as f:
             json.dump({}, f, indent=4)
+        clear_terminal()
         print(f"{YELLOW}Created empty vtubers.json file. Please update it with VTuber data.{RESET}")
         return {}
     
@@ -32,6 +64,7 @@ def load_vtubers():
         with open(vtubers_file, "r", encoding="utf-8") as f:
             return json.load(f)
     except json.JSONDecodeError:
+        clear_terminal()
         print(f"{RED}Error reading vtubers.json. File may be corrupted.{RESET}")
         return {}
 
@@ -39,6 +72,7 @@ vtubers = load_vtubers()
 
 def subscribe(step="main"):
     subscriptions = []
+    # Open subscriptions
     try:
         with open("data/subscriptions.json", "r") as f:
             data = json.load(f)
@@ -50,11 +84,12 @@ def subscribe(step="main"):
         subscriptions = []
 
     if step == "main":
+        clear_terminal()
         print(f"{CYAN}Enter the names of the VTuber to subscribe/unsubscribe,\nExample: 'Hakos Baelz, Mori Calliope'\nor type 'browse' to navigate through branches and generations,\nor 'back' to go back:{RESET}")
         user_input = input().strip()
 
         if user_input.lower() == 'back':
-            return  # Exit the function to go back to the previous menu
+            return
 
         if user_input.lower() == 'browse':
             # Navigate to branches selection
@@ -65,22 +100,25 @@ def subscribe(step="main"):
     
     elif step == "branches":
         # Show available branches
+        clear_terminal()
         print(f"{CYAN}Select branch:{RESET}")
         branches = list(vtubers.keys())
         for i, branch in enumerate(branches, start=1):
             print(f"{YELLOW}{i}. {branch}{RESET}")
 
-        branch_selection = input(f"{CYAN}Enter branch number or type 'back' to go back: {RESET}").strip()
+        branch_selection = input(f"{CYAN}\nEnter branch number or type 'back' to go back: {RESET}").strip()
         if branch_selection.lower() == 'back':
             subscribe("main")  # Go back to main menu
             return
 
         if branch_selection.isdigit() and 1 <= int(branch_selection) <= len(branches):
             selected_branch = branches[int(branch_selection) - 1]
+            clear_terminal()
             print(f"{GREEN}Selected Branch: {selected_branch}{RESET}")
             # Move to generation selection for this branch
             subscribe_generations(selected_branch, subscriptions)
         else:
+            clear_terminal()
             print(f"{RED}Invalid selection.{RESET}")
             subscribe("branches")  # Stay on branches menu
 
@@ -88,6 +126,7 @@ def subscribe_generations(selected_branch, subscriptions):
     # Show available generations for the selected branch
     generations = vtubers[selected_branch]
     generation_names = list(generations.keys())
+    print(f"{CYAN}Select Generation:{RESET}")
     for i, gen in enumerate(generation_names, start=1):
         print(f"{YELLOW}{i}. {gen}{RESET}")
 
@@ -99,10 +138,12 @@ def subscribe_generations(selected_branch, subscriptions):
     if generation_selection.isdigit() and 1 <= int(generation_selection) <= len(generation_names):
         selected_generation = generation_names[int(generation_selection) - 1]
         selected_vtubers = generations[selected_generation]
+        clear_terminal()
         print(f"{GREEN}Selected Generation: {selected_generation}{RESET}")
         # Move to VTuber selection for this generation
         subscribe_vtubers(selected_branch, selected_generation, selected_vtubers, subscriptions)
     else:
+        clear_terminal()
         print(f"{RED}Invalid generation selection.{RESET}")
         subscribe_generations(selected_branch, subscriptions)  # Stay on generations menu
 
@@ -112,7 +153,7 @@ def subscribe_vtubers(selected_branch, selected_generation, selected_vtubers, su
     for i, vtuber in enumerate(selected_vtubers, start=1):
         print(f"{YELLOW}{i}. {vtuber['name']}{RESET}")
 
-    selected_indices = input(f"{CYAN}Enter numbers separated by commas (e.g., 1,2,3) or type 'back' to go back: {RESET}")
+    selected_indices = input(f"{CYAN}\nEnter numbers separated by commas (e.g., 1,2,3) or type 'back' to go back: {RESET}")
     
     if selected_indices.strip().lower() == 'back':
         subscribe_generations(selected_branch, subscriptions)  # Go back to generations selection
@@ -126,9 +167,11 @@ def subscribe_vtubers(selected_branch, selected_generation, selected_vtubers, su
             vtuber = selected_vtubers[index]
             if vtuber not in subscriptions:
                 subscriptions.append(vtuber)  # Subscribe
+                clear_terminal()
                 print(f"{GREEN}Subscribed to {vtuber['name']}{RESET}")
             else:
                 subscriptions.remove(vtuber)  # Unsubscribe
+                clear_terminal()
                 print(f"{RED}Unsubscribed from {vtuber['name']}{RESET}")
     
     # Save subscriptions to file
@@ -152,9 +195,11 @@ def handle_direct_subscription(user_input, subscriptions):
                         found = True
                         if vtuber not in subscriptions:
                             subscriptions.append(vtuber)  # Subscribe
+                            clear_terminal()
                             print(f"{GREEN}Subscribed to {vtuber['name']}{RESET}")
                         else:
                             subscriptions.remove(vtuber)  # Unsubscribe
+                            clear_terminal()
                             print(f"{RED}Unsubscribed from {vtuber['name']}{RESET}")
                         break
                 if found:
@@ -163,6 +208,7 @@ def handle_direct_subscription(user_input, subscriptions):
                 break
 
         if not found:
+            clear_terminal()
             print(f"{RED}VTuber '{vtuber_name}' not found. Please check the name and try again.{RESET}")
     
     # Save subscriptions to file
@@ -190,6 +236,7 @@ def check_live():
         if 'live' in live_status and live_status['live']:
             live_url = live_status['live'][0]['url']
             if live_url not in opened_streams:
+                clear_terminal()
                 print(f"{GREEN}Opening live stream: {live_url}{RESET}")
                 webbrowser.open_new_tab(live_url)
                 opened_streams.append(live_url)
@@ -200,12 +247,11 @@ def check_live():
     with open(opened_streams_file, "w") as f:
         json.dump(opened_streams, f, indent=4)
 
-
 def delete_lives():
     with open(opened_streams_file, "w") as f:
         json.dump([], f, indent=4)
+    clear_terminal()
     print(f"{GREEN}Live stream data deleted.{RESET}")
-
 
 def automation_loop():
     """Handles the automation in the background."""
@@ -220,10 +266,12 @@ def view_subscriptions():
             data = json.load(f)
             subscriptions = data if isinstance(data, list) else data.get("subscriptions", [])
     except (FileNotFoundError, json.JSONDecodeError):
+        clear_terminal()
         print(f"{RED}No subscription data found.{RESET}")
         return
 
     if not subscriptions:
+        clear_terminal()
         print(f"{YELLOW}You are not subscribed to any VTubers.{RESET}")
         return
 
@@ -255,6 +303,7 @@ def view_subscriptions():
                 if found:
                     break
 
+    clear_terminal()
     print(f"{BOLD}{CYAN}       YOUR SUBSCRIPTIONS       {RESET}")
     
     total_subs = len(subscriptions)
@@ -269,7 +318,6 @@ def view_subscriptions():
                 print(f"{YELLOW}│  │  └─ {GREEN}{member}{RESET}")
     
     print(f"\n{BOLD}{CYAN}Total Subscriptions: {total_subs}{RESET}")
-
 
 def main():
     global automation
@@ -288,17 +336,21 @@ def main():
         elif doing in {'auto', 'automation'}:
             automation = not automation  # Toggle the automation flag
             if automation:
+                clear_terminal()
                 print(f"{GREEN}Automation enabled. Checking live streams every 5 minutes...{RESET}")
                 automation_thread = threading.Thread(target=automation_loop)
                 automation_thread.daemon = True
                 automation_thread.start()
             else:
+                clear_terminal()
                 print(f"{RED}Automation disabled.{RESET}")
         elif doing == 'exit':
             break
         elif doing == 'help':
+            clear_terminal()
             print(f"\n'{YELLOW}sub{RESET}' to subscribe\n'{YELLOW}check{RESET}' to check live streams\n'{YELLOW}delete{RESET}' to reset live stream data\n'{YELLOW}list{RESET}' to view subscriptions\n'{YELLOW}automation{RESET}' to toggle auto checking\n'{YELLOW}exit{RESET}' to quit")
         else:
+            clear_terminal()
             print(f'{RED}Invalid option. Please try again.{RESET}')
 
 if __name__ == "__main__":
