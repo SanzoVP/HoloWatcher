@@ -84,9 +84,9 @@
     },
     "Hololive ID": {
       "AREA15": [
-        {"name": "Ayunda Risu", "channel_id": "UCP0BspO_AMEe3aQqqpo89Dg"},
-        {"name": "Moona Hoshinova", "channel_id": "UCAoy6rzhSf4ydcYjJw3WoVg"},
-        {"name": "Airani Iofifteen", "channel_id": "UCOyYb1c43VlX9rc_lT6NKQw"}
+        {"name": "Ayunda Risu", "channel_id": "UCOyYb1c43VlX9rc_lT6NKQw"},
+        {"name": "Moona Hoshinova", "channel_id": "UCP0BspO_AMEe3aQqqpo89Dg"},
+        {"name": "Airani Iofifteen", "channel_id": "UCAoy6rzhSf4ydcYjJw3WoVg"}
       ],
       "Gen 2": [
         {"name": "Kureiji Ollie", "channel_id": "UCYz_5n-uDuChHtLo7My1HnQ"},
